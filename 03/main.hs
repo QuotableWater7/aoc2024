@@ -10,5 +10,5 @@ main = do
     handle <- openFile "03/input.txt" ReadMode
     contents <- hGetContents handle
 
-    let part1 = sum $ map (\(x, y) -> x * y) $ extractMatches contents
+    let part1 = sum $ map (uncurry (*)) $ extractMatches contents
     print part1
