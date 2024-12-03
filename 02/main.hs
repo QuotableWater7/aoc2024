@@ -1,30 +1,23 @@
 import System.IO
 
-isSafeDiff :: Int -> Int -> Bool
-isSafeDiff a b = do
-  let diff = abs (a - b)
-  diff >= 1 && diff <= 3
+isSafeDiff :: Int -> Bool
+isSafeDiff x = x >= 1 && x <= 3
 
-areMonotonicallyIncreasingOrDecreasing :: [Int] -> Bool
-areMonotonicallyIncreasingOrDecreasing [] = True
-areMonotonicallyIncreasingOrDecreasing [x] = True
-areMonotonicallyIncreasingOrDecreasing [x, y] = x /= y
-areMonotonicallyIncreasingOrDecreasing (x:y:z:xs) = (x < y && y < z) || (x > y && y > z) && areMonotonicallyIncreasingOrDecreasing (y:z:xs)
+allSameSign :: [Int] -> Bool
+allSameSign [] = True
+allSameSign [x] = True
+allSameSign (x:xs) = all (== signum x) $ map signum xs
 
 isSafe :: [Int] -> Bool
-isSafe [] = True
-isSafe [x] = True
-isSafe [x, y] = isSafeDiff x y
-isSafe (x:y:z:xs) = do
-  areMonotonicallyIncreasingOrDecreasing [x, y, z] && isSafeDiff x y && isSafe (y:z:xs)
+isSafe xs = all (isSafeDiff . abs) deltas && allSameSign deltas
+  where deltas = zipWith (-) (tail xs) xs
 
 generateAllSublists :: [Int] -> [[Int]]
 generateAllSublists [] = []
 generateAllSublists (x:xs) = xs : map (x:) (generateAllSublists xs)
 
-isSafe2 xs = do
-  any ((== True) . isSafe) (generateAllSublists xs)
-
+isSafe2 :: [Int] -> Bool
+isSafe2 = any isSafe . generateAllSublists
 
 main = do
   handle <- openFile "02/input.txt" ReadMode
@@ -32,12 +25,9 @@ main = do
 
   let records = lines contents
   let sequences = map (map read . words) records :: [[Int]]
-  let diffs = foldr (\x acc -> zipWith (-) x (tail x) : acc) [] sequences
 
-  let allResults = map isSafe sequences
-  let part1 = length (filter (== True) allResults)
+  let part1 = length $ filter (== True) $ map isSafe sequences
   print part1
 
-  let allResults2 = map isSafe2 sequences
-  let part2 = length (filter (== True) allResults2)
-  print part2
+  let allResults2 = length $ filter (== True) $ map isSafe2 sequences
+  print allResults2
