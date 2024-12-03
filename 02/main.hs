@@ -14,16 +14,17 @@ areMonotonicallyIncreasingOrDecreasing (x:y:z:xs) = (x < y && y < z) || (x > y &
 isSafe :: [Int] -> Bool
 isSafe [] = True
 isSafe [x] = True
-isSafe [x, y] = if isSafeDiff x y then True else False
+isSafe [x, y] = isSafeDiff x y
 isSafe (x:y:z:xs) = do
   areMonotonicallyIncreasingOrDecreasing [x, y, z] && isSafeDiff x y && isSafe (y:z:xs)
-
-isSafe2 xs = do
-  any ((== True) . isSafe) (generateAllSublists xs)
 
 generateAllSublists :: [Int] -> [[Int]]
 generateAllSublists [] = []
 generateAllSublists (x:xs) = xs : map (x:) (generateAllSublists xs)
+
+isSafe2 xs = do
+  any ((== True) . isSafe) (generateAllSublists xs)
+
 
 main = do
   handle <- openFile "02/input.txt" ReadMode
