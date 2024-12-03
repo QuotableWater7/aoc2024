@@ -5,7 +5,6 @@ isSafeDiff x = x >= 1 && x <= 3
 
 allSameSign :: [Int] -> Bool
 allSameSign [] = True
-allSameSign [x] = True
 allSameSign (x:xs) = all (== signum x) $ map signum xs
 
 isSafe :: [Int] -> Bool
