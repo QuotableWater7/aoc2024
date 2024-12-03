@@ -8,7 +8,7 @@ isSafeDiff a b = do
 areMonotonicallyIncreasingOrDecreasing :: [Int] -> Bool
 areMonotonicallyIncreasingOrDecreasing [] = True
 areMonotonicallyIncreasingOrDecreasing [x] = True
-areMonotonicallyIncreasingOrDecreasing [x, y] = x < y || x > y
+areMonotonicallyIncreasingOrDecreasing [x, y] = x /= y
 areMonotonicallyIncreasingOrDecreasing (x:y:z:xs) = (x < y && y < z) || (x > y && y > z) && areMonotonicallyIncreasingOrDecreasing (y:z:xs)
 
 isSafe :: [Int] -> Bool
@@ -32,6 +32,7 @@ main = do
 
   let records = lines contents
   let sequences = map (map read . words) records :: [[Int]]
+  let diffs = foldr (\x acc -> zipWith (-) x (tail x) : acc) [] sequences
 
   let allResults = map isSafe sequences
   let part1 = length (filter (== True) allResults)
