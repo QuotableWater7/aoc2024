@@ -18,10 +18,6 @@ isSafe [x, y] = if isSafeDiff x y then True else False
 isSafe (x:y:z:xs) = do
   areMonotonicallyIncreasingOrDecreasing [x, y, z] && isSafeDiff x y && isSafe (y:z:xs)
 
-isSafe2 :: [Int] -> Bool
-isSafe2 [] = True
-isSafe2 [x] = True
-isSafe2 [x, y] = if isSafeDiff x y then True else False
 isSafe2 xs = do
   any ((== True) . isSafe) (generateAllSublists xs)
 
