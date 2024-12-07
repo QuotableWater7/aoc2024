@@ -7,10 +7,7 @@ diff :: Int -> Int -> Int
 diff a b = abs (a - b)
 
 sumDiff :: [Int] -> [Int] -> Int
-sumDiff [] [] = 0
-sumDiff [] _ = 0
-sumDiff _ [] = 0
-sumDiff (a:as) (b:bs) = diff a b + sumDiff as bs
+sumDiff a b = sum (zipWith diff a b)
 
 countOccurrences :: (Ord a) => [a] -> Map.Map a Int
 countOccurrences = foldl (\acc x -> Map.insertWith (+) x 1 acc) Map.empty
